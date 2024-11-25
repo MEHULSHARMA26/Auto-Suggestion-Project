@@ -49,8 +49,18 @@ const displaySuggestions = (suggestions) => {
   });
 };
 
+let debounceTimeout;
+const debounce = (callback, delay) => {
+  return (...args) => {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => callback(...args), delay);
+  };
+};
 
-searchBar.addEventListener("input", (e) => {
-  const query = e.target.value;
-  fetchSuggestions(query);
-});
+searchBar.addEventListener(
+  "input",
+  debounce((e) => {
+    const query = e.target.value;
+    fetchSuggestions(query);
+  }, 2000)
+);
